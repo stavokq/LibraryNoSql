@@ -1,0 +1,47 @@
+services:
+  library-postgres:
+    image: postgres:16-alpine
+    container_name: library-lab2-postgres
+    restart: unless-stopped
+    cpus: "2.0"
+    mem_limit: 2g
+    environment:
+      POSTGRES_DB: library_nosql_lab
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+      - library_lab2_pgdata:/var/lib/postgresql/data
+
+  library-mongo:
+    image: mongo:7.0
+    container_name: library-lab2-mongo
+    restart: unless-stopped
+    cpus: "2.0"
+    mem_limit: 2g
+    environment:
+      MONGO_INITDB_DATABASE: library_nosql_lab
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo:/docker-entrypoint-initdb.d
+      - library_lab2_mongodata:/data/db
+
+  library-redis:
+    image: redis:7.2-alpine
+    container_name: library-lab2-redis
+    restart: unless-stopped
+    cpus: "1.0"
+    mem_limit: 512m
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - library_lab2_redisdata:/data
+
+volumes:
+  library_lab2_pgdata:
+  library_lab2_mongodata:
+  library_lab2_redisdata:
