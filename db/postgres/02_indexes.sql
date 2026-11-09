@@ -25,6 +25,10 @@ CREATE INDEX idx_item_attrs_key_int
 ON catalog_item_attributes USING btree (attr_key, val_int, item_id)
 WHERE val_int IS NOT NULL;
 
+CREATE INDEX idx_item_attrs_item_key_int
+ON catalog_item_attributes USING btree (item_id, attr_key, val_int)
+WHERE val_int IS NOT NULL;
+
 CREATE INDEX idx_item_attrs_key_str
 ON catalog_item_attributes USING btree (attr_key, val_string, item_id)
 WHERE val_string IS NOT NULL;

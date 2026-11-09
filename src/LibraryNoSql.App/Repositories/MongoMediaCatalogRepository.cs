@@ -185,7 +185,7 @@ public class MongoMediaCatalogRepository : IMediaCatalogRepository
     public async Task<StorageStats> GetStorageStatsAsync()
     {
         var stats = await _database.RunCommandAsync<BsonDocument>(new BsonDocument("collStats", CollectionName));
-        double dataMb = stats.GetValue("storageSize", 0).ToDouble() / (1024.0 * 1024.0);
+        double dataMb = stats.GetValue("size", 0).ToDouble() / (1024.0 * 1024.0);
         double indexMb = stats.GetValue("totalIndexSize", 0).ToDouble() / (1024.0 * 1024.0);
         long count = stats.GetValue("count", 0).ToInt64();
         return new StorageStats(dataMb, indexMb, dataMb + indexMb, count);

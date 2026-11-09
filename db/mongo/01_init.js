@@ -105,7 +105,7 @@ dbRef.catalog_items.createIndex(
   { name: "ix_active_type_genre_cost" }
 );
 dbRef.catalog_items.createIndex(
-  { isActive: 1, itemType: 1, "specs.minPlayers": 1, "specs.maxPlayers": 1, "specs.playTimeMin": 1, popularityScore: -1, _id: 1 },
+  { isActive: 1, itemType: 1, popularityScore: -1, _id: 1, "specs.minPlayers": 1, "specs.maxPlayers": 1, "specs.playTimeMin": 1 },
   { name: "ix_boardgame_specs_popularity" }
 );
 dbRef.catalog_items.createIndex(

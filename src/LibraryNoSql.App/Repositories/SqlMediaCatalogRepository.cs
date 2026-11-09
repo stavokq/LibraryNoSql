@@ -205,7 +205,7 @@ public class SqlMediaCatalogRepository : IMediaCatalogRepository
             await conn.ExecuteAsync("SET session_replication_role = 'origin';");
         }
 
-        await conn.ExecuteAsync("ANALYZE;");
+        await conn.ExecuteAsync("VACUUM ANALYZE;");
     }
 
     public async Task<CatalogCard?> GetByIdAsync(string id)
