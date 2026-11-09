@@ -17,7 +17,8 @@ public class SqlMediaCatalogRepository : IMediaCatalogRepository
         var builder = new NpgsqlConnectionStringBuilder(connectionString)
         {
             MaxPoolSize = 100,
-            MinPoolSize = 10
+            MinPoolSize = 10,
+            CommandTimeout = 300
         };
         _dataSource = NpgsqlDataSource.Create(builder.ConnectionString);
     }
@@ -45,6 +46,10 @@ public class SqlMediaCatalogRepository : IMediaCatalogRepository
                 publishers
             RESTART IDENTITY CASCADE;
             """);
+
+        await conn.ExecuteAsync("SET session_replication_role = 'replica';");
+        try
+        {
 
         await using (var writer = await conn.BeginBinaryImportAsync(
             "COPY publishers (id, name, country, website) FROM STDIN (FORMAT BINARY)"))
@@ -193,6 +198,11 @@ public class SqlMediaCatalogRepository : IMediaCatalogRepository
                 }
             }
             await writer.CompleteAsync();
+        }
+        }
+        finally
+        {
+            await conn.ExecuteAsync("SET session_replication_role = 'origin';");
         }
 
         await conn.ExecuteAsync("ANALYZE;");
